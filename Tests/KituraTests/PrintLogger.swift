@@ -19,17 +19,25 @@ import Foundation
 import LoggerAPI
 
 public class PrintLogger: Logger {
+    private let type: LoggerMessageType
+
     public func log(_ type: LoggerMessageType, msg: String,
                     functionName: String, lineNum: Int, fileName: String ) {
-        print("\(type): \(functionName) \(fileName) line \(lineNum) - \(msg)")
+        if type.rawValue >= self.type.rawValue {
+            print("\(type): \(functionName) \(fileName) line \(lineNum) - \(msg)")
+        }
     }
 
     public func isLogging(_ level: LoggerAPI.LoggerMessageType) -> Bool {
-        return true
+        return type.rawValue >= self.type.rawValue
     }
     
-    public static func use() {
-        Log.logger = PrintLogger()
+    public static func use(_ type: LoggerMessageType = .verbose) {
+        Log.logger = PrintLogger(type)
         setbuf(stdout, nil)
+    }
+
+    public init (_ type: LoggerMessageType = .verbose) {
+        self.type = type
     }
 }

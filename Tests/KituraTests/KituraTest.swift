@@ -30,7 +30,7 @@ protocol KituraTest {
 extension KituraTest {
 
     func doSetUp() {
-        PrintLogger.use()
+        PrintLogger.use(.warning)
     }
 
     func doTearDown() {
@@ -39,30 +39,19 @@ extension KituraTest {
 
     func performServerTest(_ router: ServerDelegate, line: Int = #line,
                            asyncTasks: @escaping (XCTestExpectation) -> Void...) {
-
-        var expectations = [XCTestExpectation]()
-
-        for index in 0..<asyncTasks.count {
-            expectations.append(self.expectation(line: line, index: index))
-        }
-
-        let exps = expectations
-
         Kitura.addHTTPServer(onPort: 8090, with: router)
-            .started {
-               let requestQueue = DispatchQueue(label: "Request queue")
-
-               for value in zip(asyncTasks, exps) {
-                   let expectation = value.1
-                   requestQueue.async() {
-                       value.0(expectation)
-                   }
-               }
-        }
-
         Kitura.start()
 
-        self.waitExpectation(timeout: 10) { error in
+        let requestQueue = DispatchQueue(label: "Request queue")
+
+        for (index, asyncTask) in asyncTasks.enumerated() {
+            let expectation = self.expectation(line: line, index: index)
+            requestQueue.async() {
+                asyncTask(expectation)
+            }
+        }
+
+        self.waitExpectation(timeout: 30) { error in
                 // blocks test until request completes
                 Kitura.stop()
                 XCTAssertNil(error)
