@@ -30,7 +30,7 @@ protocol KituraTest {
 extension KituraTest {
 
     func doSetUp() {
-        PrintLogger.use(.warning)
+        PrintLogger.use(.verbose)
     }
 
     func doTearDown() {
@@ -47,7 +47,7 @@ extension KituraTest {
         for (index, asyncTask) in asyncTasks.enumerated() {
             let expectation = self.expectation(line: line, index: index)
             requestQueue.async() {
-                print("Starting async task for expectation: \"\(expectation)\"")
+                print("Starting async task for expectation: \"\(expectation.description)\"")
                 asyncTask(expectation)
             }
         }
