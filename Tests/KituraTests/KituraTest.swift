@@ -47,11 +47,12 @@ extension KituraTest {
         for (index, asyncTask) in asyncTasks.enumerated() {
             let expectation = self.expectation(line: line, index: index)
             requestQueue.async() {
+                print("Starting async task for expectation: \"\(expectation)\"")
                 asyncTask(expectation)
             }
         }
 
-        self.waitExpectation(timeout: 30) { error in
+        waitExpectation(timeout: 30) { error in
                 // blocks test until request completes
                 Kitura.stop()
                 XCTAssertNil(error)
