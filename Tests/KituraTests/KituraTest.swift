@@ -44,15 +44,16 @@ extension KituraTest {
 
         let requestQueue = DispatchQueue(label: "Request queue")
 
+        let timeout = Date(timeIntervalSinceNow: 10)
         for (index, asyncTask) in asyncTasks.enumerated() {
             let expectation = self.expectation(line: line, index: index)
             requestQueue.async() {
-                print("Starting async task for expectation: \"\(expectation.description)\"")
+                print("Starting task for \(expectation) with \(timeout.timeIntervalSinceNow) seconds to timeout")
                 asyncTask(expectation)
             }
         }
 
-        waitExpectation(timeout: 30) { error in
+        waitExpectation(timeout: timeout.timeIntervalSinceNow) { error in
                 // blocks test until request completes
                 Kitura.stop()
                 XCTAssertNil(error)
