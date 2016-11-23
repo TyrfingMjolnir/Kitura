@@ -42,7 +42,7 @@ extension KituraTest {
         Kitura.addHTTPServer(onPort: 8090, with: router)
         Kitura.start()
 
-        let requestQueue = DispatchQueue(label: "Request queue")
+        let requestQueue = DispatchQueue(label: "Request queue", attributes: .concurrent)
 
         let timeout = Date(timeIntervalSinceNow: 10)
         for (index, asyncTask) in asyncTasks.enumerated() {
