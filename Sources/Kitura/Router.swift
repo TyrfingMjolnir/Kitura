@@ -262,22 +262,27 @@ extension Router : ServerDelegate {
     /// - Parameter response: The `ServerResponse` object used to send responses to the
     ///                      HTTP request at the Kitura-net API level.
     public func handle(request: ServerRequest, response: ServerResponse) {
+        Log.debug("Start handle request for \(request.urlString)")
         let routeReq = RouterRequest(request: request)
         let routeResp = RouterResponse(response: response, router: self, request: routeReq)
+        Log.debug("Start process request for \(request.urlString)")
 
         process(request: routeReq, response: routeResp) { [unowned self] () in
+            Log.debug("End process request for \(request.urlString)")
             do {
                 if  !routeResp.state.invokedEnd {
                     if  routeResp.statusCode == .unknown  && !routeResp.state.invokedSend {
                         self.sendDefaultResponse(request: routeReq, response: routeResp)
                     }
                     try routeResp.end()
+                    Log.debug("routeResp.end() called for \(request.urlString)")
                 }
             } catch {
                 // Not much to do here
                 Log.error("Failed to send response to the client")
             }
         }
+        Log.debug("End handle request for \(request.urlString)")
     }
 
     /// Processes the request

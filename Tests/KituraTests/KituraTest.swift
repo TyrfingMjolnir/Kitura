@@ -30,7 +30,7 @@ protocol KituraTest {
 extension KituraTest {
 
     func doSetUp() {
-        PrintLogger.use(.verbose)
+        PrintLogger.use(.debug)
     }
 
     func doTearDown() {
@@ -42,7 +42,7 @@ extension KituraTest {
         Kitura.addHTTPServer(onPort: 8090, with: router)
         Kitura.start()
 
-        let requestQueue = DispatchQueue(label: "Request queue", attributes: .concurrent)
+        let requestQueue = DispatchQueue(label: "Request queue")
 
         let timeout = Date(timeIntervalSinceNow: 10)
         for (index, asyncTask) in asyncTasks.enumerated() {

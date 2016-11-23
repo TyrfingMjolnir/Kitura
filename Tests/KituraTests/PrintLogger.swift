@@ -24,7 +24,7 @@ public class PrintLogger: Logger {
     public func log(_ type: LoggerMessageType, msg: String,
                     functionName: String, lineNum: Int, fileName: String ) {
         if type.rawValue >= self.type.rawValue {
-            print("\(type): \(functionName) \(fileName) line \(lineNum) - \(msg)")
+            print("\(Date.timeIntervalSinceReferenceDate): \(type): \(functionName) \(fileName) line \(lineNum) - \(msg)")
         }
     }
 
