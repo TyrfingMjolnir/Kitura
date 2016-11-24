@@ -18,10 +18,24 @@ import PackageDescription
 
 let package = Package(
     name: "Kitura",
+    targets: [
+        Target(name: "Kitura", dependencies: ["KituraNet"]),
+        Target(name: "KituraNet", dependencies: ["CHTTPParser"]),
+        Target(name: "CHTTPParser", dependencies: [])
+    ],
     dependencies: [
-        .Package(url: "https://github.com/IBM-Swift/Kitura-net.git", majorVersion: 1, minor: 2),
         .Package(url: "https://github.com/IBM-Swift/SwiftyJSON.git", majorVersion: 15),
+        .Package(url: "https://github.com/IBM-Swift/LoggerAPI.git", majorVersion: 1, minor: 1),
+        .Package(url: "https://github.com/IBM-Swift/BlueSocket.git", majorVersion: 0, minor: 12),
+        .Package(url: "https://github.com/IBM-Swift/CCurl.git", majorVersion: 0, minor: 2),
+        .Package(url: "https://github.com/IBM-Swift/BlueSSLService.git", majorVersion: 0, minor: 12),
         .Package(url: "https://github.com/IBM-Swift/Kitura-TemplateEngine.git", majorVersion: 1, minor: 1)
     ],
     exclude: ["Configuration", "Scripts"]
 )
+
+#if os(Linux)
+    package.dependencies.append(
+        .Package(url: "https://github.com/IBM-Swift/CEpoll.git", majorVersion: 0, minor: 1))
+#endif
+
