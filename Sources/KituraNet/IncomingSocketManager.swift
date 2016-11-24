@@ -153,13 +153,13 @@ public class IncomingSocketManager  {
                                 Log.debug("end handleWrite")
                             }
                             if  (event.events & EPOLLIN.rawValue) != 0 {
-    Log.debug("start handleRead")
+                                Log.debug("start handleRead")
                                 let processed = handler.handleRead()
                                 if !processed {
                                     deferredHandlingNeeded = true
                                     deferredHandlers[event.data.fd] = handler
                                 }
-    Log.debug("end handleRead")
+                                Log.debug("end handleRead")
                             }
                         }
                         else {
